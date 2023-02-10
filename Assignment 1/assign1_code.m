@@ -275,3 +275,37 @@ random_z = [
 102, 148, 96, 8, 71, 24, 65, 146, 125, 12
 48, 41, 8, 136, 54, 37, 144, 65, 118, 62
 ]
+
+
+%------------------------------------------------------
+clc;
+sample_mean = mean(input_data);
+sample_variance = var(input_data);
+%------------------------------------------------------
+
+z = zeros(1,120);
+for i=1:120
+    rz = 0;
+    for j=1:10
+        rz = rz + input_data(random_z(i,j));
+    end
+    z(1,i) =  rz/sqrt(10);
+end
+
+n = length(z);
+dof = n - 1;
+mean_z = mean(z)
+variance_z = var(z)
+
+table_t_stat = abs(tinv(alpha/2,dof))
+z_mean_low = mean_z - table_t_stat*sqrt(variance_z/n)
+z_mean_high = mean_z + table_t_stat*sqrt(variance_z/n)
+population_mean_low = z_mean_low/sqrt(10)
+population_mean_high = z_mean_high/sqrt(10)
+
+tab_chi2_1malpby2 = chi2inv(1-alpha/2,dof)
+tab_chi2_alpby2 = chi2inv(alpha/2,dof)
+z_var_low = dof*variance_z/tab_chi2_1malpby2
+z_var_high = dof*variance_z/tab_chi2_alpby2
+population_var_low = z_var_low
+population_var_high = z_var_high
