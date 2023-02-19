@@ -279,8 +279,23 @@ random_z = [
 
 %------------------------------------------------------
 clc;
-sample_mean = mean(input_data);
-sample_variance = var(input_data);
+sample_mean = mean(input_data) %first moment about 0
+second_moment = var(input_data) %second moment about mean || summation(x-mean)^2/n-1
+third_moment = skewness(input_data)*(std(input_data).^3) %third moment about mean
+fourth_moment = kurtosis(input_data)*(std(input_data).^4) %fourth moment about mean
+
+first = moment(input_data,1) %first moment about mean
+second = moment(input_data,2) %second moment about mean || summation(x-mean)^2/n
+third = moment(input_data,3)
+fourth = moment(input_data,4)
+
+m1 = sample_mean;
+m2 = second_moment;
+m3 = third_moment;
+m4 = fourth_moment;
+beta_1 = m3.^2 / m2.^3 % ==skewness(input_data).^2
+beta_2 = m4 / m2.^2    % ==kurtosis(input_data)
+classification_term = beta_1 / beta_2^(1.5)
 %------------------------------------------------------
 
 z = zeros(1,120);
@@ -294,18 +309,18 @@ end
 
 n = length(z);
 dof = n - 1;
-mean_z = mean(z)
-variance_z = var(z)
+mean_z = mean(z);
+variance_z = var(z);
 
-table_t_stat = abs(tinv(alpha/2,dof))
-z_mean_low = mean_z - table_t_stat*sqrt(variance_z/n)
-z_mean_high = mean_z + table_t_stat*sqrt(variance_z/n)
+table_t_stat = abs(tinv(alpha/2,dof));
+z_mean_low = mean_z - table_t_stat*sqrt(variance_z/n);
+z_mean_high = mean_z + table_t_stat*sqrt(variance_z/n);
 population_mean_low = z_mean_low/sqrt(10)
 population_mean_high = z_mean_high/sqrt(10)
 
-tab_chi2_1malpby2 = chi2inv(1-alpha/2,dof)
-tab_chi2_alpby2 = chi2inv(alpha/2,dof)
-z_var_low = dof*variance_z/tab_chi2_1malpby2
-z_var_high = dof*variance_z/tab_chi2_alpby2
+tab_chi2_1malpby2 = chi2inv(1-alpha/2,dof);
+tab_chi2_alpby2 = chi2inv(alpha/2,dof);
+z_var_low = dof*variance_z/tab_chi2_1malpby2;
+z_var_high = dof*variance_z/tab_chi2_alpby2;
 population_var_low = z_var_low
 population_var_high = z_var_high
