@@ -290,9 +290,9 @@ third = moment(input_data,3)
 fourth = moment(input_data,4)
 
 m1 = sample_mean;
-m2 = second_moment;
-m3 = third_moment;
-m4 = fourth_moment;
+m2 = second;
+m3 = third;
+m4 = fourth;
 beta_1 = m3.^2 / m2.^3 % ==skewness(input_data).^2
 beta_2 = m4 / m2.^2    % ==kurtosis(input_data)
 classification_term = beta_1 / beta_2^(1.5)
