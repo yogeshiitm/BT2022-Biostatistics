@@ -298,7 +298,7 @@ beta_2 = m4 / m2.^2    % ==kurtosis(input_data)
 classification_term = beta_1 / beta_2^(1.5)
 %------------------------------------------------------
 
-z = zeros(1,120);
+z = zeros(1,120); %where 120 = subsamplesize
 for i=1:120
     rz = 0;
     for j=1:10
@@ -316,11 +316,11 @@ table_t_stat = abs(tinv(alpha/2,dof));
 z_mean_low = mean_z - table_t_stat*sqrt(variance_z/n);
 z_mean_high = mean_z + table_t_stat*sqrt(variance_z/n);
 population_mean_low = z_mean_low/sqrt(10)
-population_mean_high = z_mean_high/sqrt(10)
+population_mean_high = z_mean_high/sqrt(10)     % mu_x = mu_z/ sqrt(w) #Lect13
 
 tab_chi2_1malpby2 = chi2inv(1-alpha/2,dof);
 tab_chi2_alpby2 = chi2inv(alpha/2,dof);
 z_var_low = dof*variance_z/tab_chi2_1malpby2;
 z_var_high = dof*variance_z/tab_chi2_alpby2;
 population_var_low = z_var_low
-population_var_high = z_var_high
+population_var_high = z_var_high                % signma2_x = sigma2_z #Lect13
