@@ -84,10 +84,11 @@ for i = 1:15
     % fprintf('p ttest2 unequal: %f\n', p2);
     % fprintf('p ttestclass: %f\n\n', p);
     p_values_original(i) = p;
+    disp(ttestclass(control_data{i}, treatment_data{i}, alpha))
 end
 lowest_p_value_original = min(p_values_original);
 fprintf('Lowest p-value original: %f\n', lowest_p_value_original);
-%% 
+
 
 % Two-sample t-test for shuffled datasets
 p_values_shuffled = zeros(15, 1);
@@ -114,19 +115,54 @@ fprintf('Lowest p-value shuffled: %f\n', lowest_p_value_shuffled);
 
 % To calculate the FDR in the standard t-test at the given alpha, we can use the Benjamini-Hochberg procedure:
 % Standard FDR using Benjamini-Hochberg procedure
-[sorted_p, sort_i] = sort(p_values_original);
+sorted_p_original = sort(p_values_original);
+sorted_p_shuffled = sort(p_values_shuffled);
 n = length(p_values_original);
 FDR = alpha*(1:n)./n;
-rej = sorted_p <= FDR';
-last_rej = max(sort_i(rej));
-FDR_est = sum(rej)/n*100;
-
+rej1 = sorted_p_original <= FDR';
+rej2 = sorted_p_shuffled <= FDR';
+FDR_est = (sum(rej1)+sum(rej2))/(n+n)*100;
 fprintf('FDR using Benjamini-Hochberg method at given Alpha: %f %%\n', FDR_est);
 
 % To calculate the number of significant tests in the Bonferroni method at the given FWER, we can use the following code:
 % Bonferroni method at the given FWER
 alpha_bonf = FWER/n;
-rej_bonf = p_values_original <= alpha_bonf;
-FDR_est_bonf = sum(rej_bonf)/n*100;
-
+rej_bonf1 = p_values_original <= alpha_bonf;
+rej_bonf2 = p_values_shuffled <= alpha_bonf;
+FDR_est_bonf = (sum(rej_bonf1)+sum(rej_bonf2))/(n+n)*100;
 fprintf('FDR using Bonferroni method at given FWER: %f %%\n', FDR_est_bonf);
+%% 
+
+
+
+% Perform the t-test on the simulated data and calculate the FDR
+num_rejections = 0;
+for i = 1:15
+    sim_out1 = ttestclass(control_data{i}, treatment_data{i}, alpha);
+    sim_out2 = ttestclass(control_data_shuffled{i}, treatment_data_shuffled{i}, alpha);
+    if sim_out1.ttest_result == 1
+        num_rejections = num_rejections + 1;
+    end
+    if sim_out2.ttest_result == 1
+        num_rejections = num_rejections + 1;
+    end
+end
+fdr_percent1 = num_rejections / 30 * 100;
+fprintf('FDR using ttestclass at alpha: %f %%\n', fdr_percent1);
+
+
+% Perform the t-test on the simulated data and calculate the FDR
+alphastar = FWER/15;
+num_rejections = 0;
+for i = 1:15
+    sim_out1 = ttestclass(control_data{i}, treatment_data{i}, alphastar);
+    sim_out2 = ttestclass(control_data_shuffled{i}, treatment_data_shuffled{i}, alphastar);
+    if sim_out.ttest_result == 1
+        num_rejections = num_rejections + 1;
+    end
+    if sim_out2.ttest_result == 1
+        num_rejections = num_rejections + 1;
+    end
+end
+fdr_percent2 = num_rejections / 30 * 100;
+fprintf('FDR using ttestclass at fwer: %f %%\n', fdr_percent2);
