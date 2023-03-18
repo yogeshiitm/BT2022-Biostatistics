@@ -28,7 +28,7 @@ lowest_p_value_shuffled = min(p_values_shuffled);
 sorted_p_values = sort(p_values_original);
 n = length(sorted_p_values);
 fdr = alpha * (1:n) ./ n;
-reject = sorted_p_values < fdr;
+reject = sorted_p_values < fdr';
 fdr_rate = sum(reject) / n * 100;
 
 To calculate the number of significant tests in the Bonferroni method at the given FWER, we can use the following code:
