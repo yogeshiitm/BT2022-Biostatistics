@@ -72,7 +72,8 @@ treatment_data{15} = [43.9064	33.298	20.5109	44.6188	36.0547];
 
 
 % clc;
-p_values_original = zeros(15, 1);
+p_values_original = zeros(15,1);
+%% 
 for i = 1:15
     % disp(control_data{i})
     % disp(treatment_data{i})
@@ -82,10 +83,11 @@ for i = 1:15
     % fprintf('p ttest2 equal: %f\n', p1);
     % fprintf('p ttest2 unequal: %f\n', p2);
     % fprintf('p ttestclass: %f\n\n', p);
-    p_values_original(i) = p1;
+    p_values_original(i) = p;
 end
 lowest_p_value_original = min(p_values_original);
 fprintf('Lowest p-value original: %f\n', lowest_p_value_original);
+%% 
 
 % Two-sample t-test for shuffled datasets
 p_values_shuffled = zeros(15, 1);
@@ -108,3 +110,23 @@ for i = 1:15
 end
 lowest_p_value_shuffled = min(p_values_shuffled);
 fprintf('Lowest p-value shuffled: %f\n', lowest_p_value_shuffled);
+%% 
+
+% To calculate the FDR in the standard t-test at the given alpha, we can use the Benjamini-Hochberg procedure:
+% Standard FDR using Benjamini-Hochberg procedure
+[sorted_p, sort_i] = sort(p_values_original);
+n = length(p_values_original);
+FDR = alpha*(1:n)./n;
+rej = sorted_p <= FDR';
+last_rej = max(sort_i(rej));
+FDR_est = sum(rej)/n*100;
+
+fprintf('FDR using Benjamini-Hochberg method at given Alpha: %f %%\n', FDR_est);
+
+% To calculate the number of significant tests in the Bonferroni method at the given FWER, we can use the following code:
+% Bonferroni method at the given FWER
+alpha_bonf = FWER/n;
+rej_bonf = p_values_original <= alpha_bonf;
+FDR_est_bonf = sum(rej_bonf)/n*100;
+
+fprintf('FDR using Bonferroni method at given FWER: %f %%\n', FDR_est_bonf);

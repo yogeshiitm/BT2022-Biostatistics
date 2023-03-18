@@ -34,7 +34,5 @@ fdr_rate = sum(reject) / n * 100;
 To calculate the number of significant tests in the Bonferroni method at the given FWER, we can use the following code:
 
 % Number of significant tests in the Bonferroni method
-bonferroni_alpha = alpha / 15;
+bonferroni_alpha = FWER / 15;
 significant_tests = sum(p_values_original < bonferroni_alpha);
-
-Note that in the Bonferroni method, we use a more conservative significance level (alpha / 15) to adjust for multiple comparisons.
