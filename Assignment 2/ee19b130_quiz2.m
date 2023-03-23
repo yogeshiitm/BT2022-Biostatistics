@@ -140,7 +140,7 @@ num_rejections = 0;
 for i = 1:15
     sim_out1 = ttestclass(control_data{i}, treatment_data{i}, alpha);
     sim_out2 = ttestclass(control_data_shuffled{i}, treatment_data_shuffled{i}, alpha);
-    if sim_out1.ttest_result == 1
+    if sim_out1.ttest_result == 1  %% i.e. null hypothesis is rejected, and there is enough evidence to support the alternative hypothesis
         num_rejections = num_rejections + 1;
     end
     if sim_out2.ttest_result == 1
