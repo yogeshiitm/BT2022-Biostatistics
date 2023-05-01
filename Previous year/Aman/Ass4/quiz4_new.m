@@ -4,7 +4,6 @@ n = 20;
 p = 5;
 dofreg = n - 5;
 doferr = n - 1 - dofreg;
-
 alpha = 0.16192785;
 
 data = [
@@ -30,37 +29,38 @@ data = [
         1.3716858 3.6006343 3.2096727 3.2536739 760.09549
       ];
 
-X = zeros(n, p);
-y = zeros(n, 1);
 
-for i = 1:20
+X = zeros(n,p);
+Y = zeros(n,1);
+
+for i=1:n
+    Y(i, 1) = data(i, 5);
     X(i, 1) = 1;
     X(i, 2) = data(i, 1) * data(i, 4) * data(i, 1) * data(i, 3) * data(i, 1);
     X(i, 3) = data(i, 2) * data(i, 3) * data(i, 4) * data(i, 1) * data(i, 3);
     X(i, 4) = data(i, 3) * data(i, 3) * data(i, 2) * data(i, 3) * data(i, 1);
     X(i, 5) = data(i, 4) * data(i, 4) * data(i, 1) * data(i, 2) * data(i, 4);
-    y(i, 1) = data(i, 5);
 end
 
-betaCap = ((X' * X)^-1) * (X') * y;
-disp(betaCap);
+beta_cap = ((X' * X)^-1) * (X') * Y;
+disp(beta_cap);
 
-yCap = X * betaCap;
+Y_cap = X * beta_cap;
 
-SSE = sum((y - yCap).^2);
-SST = sum(y.^2) - sum(y)^2 / n;
+SSE = sum((Y - Y_cap).^2);
+SST = sum(Y.^2) - sum(Y)^2 / n;
 SSR = SST - SSE;
-Rsq = SSR / SST;
+Rsquare = SSR / SST;
 
 disp(SSR);
 disp(SSE);
-disp(Rsq);
+disp(Rsquare);
 
-covBeta = (SSE / doferr) * (X' * X)^-1;
-betaRange = zeros(5, 2);
-betaRange(:, 1) = betaCap - abs(tinv(alpha / 2, doferr)) * sqrt(diag(covBeta));
-betaRange(:, 2) = betaCap + abs(tinv(alpha / 2, doferr)) * sqrt(diag(covBeta));
+covbeta = (SSE / doferr) * (X' * X)^-1;
+betarange = zeros(5, 2);
+betarange(:, 1) = beta_cap - abs(tinv(alpha/2, doferr)) * sqrt(diag(covbeta));
+betarange(:, 2) = beta_cap + abs(tinv(alpha/2, doferr)) * sqrt(diag(covbeta));
 
 index = 2;
-disp(betaRange(index, :));
-% SSE = sum((y-ycap).^2);SST = sum(y.^2)-sum(y)^2/n;SSR = SST-SSE;Rsquare = SSR/SST
+disp(betarange(index, :));
+% SSE = sum((y-ycap).^2);SST = sum(y.^2)-sum(y)^2/n;SSR = SST-SSE;Rsquareuare = SSR/SST

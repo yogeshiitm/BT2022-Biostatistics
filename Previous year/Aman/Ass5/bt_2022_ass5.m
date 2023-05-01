@@ -131,9 +131,10 @@ dfc = @(x,a,b,c,d,delp) ((fn(x,a,b,c+delp,d)-fn(x,a,b,c,d))/delp);
 dfd = @(x,a,b,c,d,delp) ((fn(x,a,b,c,d+delp)-fn(x,a,b,c,d))/delp);
 a=1;b=1;c=1;d=1;
 
-nump =4;
-error_dof = length(X)-nump;
+nump =4; % a,b,c,d
+tdof = length(X)-1;
 reg_dof = nump-1;
+error_dof = length(X)-nump; % error_dof = tdof - reg_dof;
 lambda = 0.1;
 tuning_param = 5;
 stat =1;
@@ -167,7 +168,7 @@ while del_exiti>del_exit
     
     if del_exiti <= del_exit
         ycap = fn(X,param(1,1),param(2,1),param(3,1),param(4,1));
-        SSE = sum((Y-ycap).^2);
+        SSE = sum((Y-ycap).^2); % SSE = sum(ydat.^2) - sum(ydat)^2/ssize;
         SSR = SST - SSE;
         sigmacap = SSE/error_dof;
         covbeta = sigmacap * (jtj)^-1;
@@ -185,12 +186,12 @@ while del_exiti>del_exit
     end
     
 end
-Fcal= (SSR/reg_dof)/sigmacap;
+Fcal= (SSR/reg_dof)/sigmacap; % Freq
 ftabl = finv(alpha/2,reg_dof,error_dof);
 ftabh = finv(1-alpha/2,reg_dof,error_dof);
 ftest_status = 0;
 if Fcal < ftabl || Fcal>ftabh
-   ftest_status = 1;
+   ftest_status = 1; %nfF = 1
 end
 paramr = zeros(nump,4);
 paramr(:,1) = param;
