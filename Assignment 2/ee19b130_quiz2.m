@@ -3,7 +3,15 @@
 % FDR (%) of the standard method at the given alpha
 % FDR (%) of the Bonferroni method at the given FWER
 
-%--------------------- Page-105: EE19B130 ----------------------%
+
+% ERROR IN ANSWER
+% EE19B130, 1.39931,0.00202699,30.6666,4.06e-05,16
+
+% |x - 0.000024|/x * 100 = 1.39931        => x = 0.0000236688 (ans)  &  0.00002434
+% |x - 0.008880|/x * 100 = 0.00202699     => x = 0.008879            &  0.00888018
+% |x - 93.333333|/x * 100 = 30.6666       => x = 71.42858 (ans)      &  134.6152 (not possible since answer must be <= 100)
+% |x - 71.428571|/x * 100 = 4.06e-05      => x = 71.428542 (ans)     &  71.4286
+
 alpha = 0.0500733;
 FWER = 0.399667;
 alphastar = FWER/15;
